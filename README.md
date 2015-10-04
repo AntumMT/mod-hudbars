@@ -1,5 +1,5 @@
-Hudbars mod for Minetest
+Hudbars, hbhunger and hbarmor mods for Minetest
 
-This mod adds hud bars to the player's screen for health, hunger and drowning.
+These mod adds hud bars to the player's screen for health, hunger, drowning and armor levels.
 
-Mod created by Wuzzy and edited by TenPlus1 for Xanadu server
+Mods created by Wuzzy and edited by TenPlus1 for Xanadu server
