@@ -336,9 +336,21 @@ function hb.change_hudbar(player, identifier, new_value, new_max_value)
 		return
 	end
 
+--- ADDED THIS BIT
+if not player then
+print ("line 340 player nil")
+return
+end
+
 	local name = player:get_player_name()
 	local hudtable = hb.get_hudtable(identifier)
 	local value_changed, max_changed = false, false
+
+-- ADDED THIS TOO
+if not hudtable.hudstate[name] then
+print ("line 350 hudtabke.hudstate[name] nil")
+return
+end
 
 	if new_value ~= nil then
 		if new_value ~= hudtable.hudstate[name].value then
@@ -415,7 +427,8 @@ end
 function hb.hide_hudbar(player, identifier)
 	local name = player:get_player_name()
 	local hudtable = hb.get_hudtable(identifier)
-	if hudtable.hudstate[name].hidden == false then
+	if hudtable.hudstate[name]
+	and hudtable.hudstate[name].hidden == false then
 		if hb.settings.bar_type == "progress_bar" then
 			if hudtable.hudids[name].icon ~= nil then
 				player:hud_change(

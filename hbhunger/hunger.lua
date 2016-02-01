@@ -26,12 +26,10 @@ function hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal)
 			local name = user:get_player_name()
 			local h = tonumber(hbhunger.hunger[name])
 			local hp = user:get_hp()
-			minetest.sound_play({
-				name = "hbhunger_eat_generic",
-				gain = 1
-			}, {
-				pos = user:getpos(),
-				max_hear_distance = 16
+			minetest.sound_play("hbhunger_eat_generic", {
+				object = user,
+				max_hear_distance = 10,
+				gain = 1.0
 			})
 
 			-- Saturation
@@ -177,7 +175,7 @@ if minetest.get_modpath("bushes_classic") then
 		"raspberry",
 		"gooseberry",
 		"mixed_berry"}
-	for _, berry in ipairs(berries) do
+	for _, berry in pairs(berries) do
 		if berry ~= "mixed_berry" then
 			overwrite("bushes:"..berry, 1)
 		end
@@ -340,6 +338,7 @@ if minetest.get_modpath("farming") and farming.mod == "redo" then
 	overwrite("farming:rhubarb", 1)
 	overwrite("farming:rhubarb_pie", 6)
 	overwrite("farming:beans", 1)
+	overwrite("farming:grapes", 2)
 end
 
 if minetest.get_modpath("kpgmobs") ~= nil then
@@ -410,7 +409,12 @@ if minetest.get_modpath("xanadu") then
 	overwrite("xanadu:bacon", 4)
 	overwrite("xanadu:burger", 7)
 	overwrite("xanadu:fries", 6)
+	overwrite("xanadu:glass_wine", 2)
 	overwrite("xanadu:potato_salad", 8, "ethereal:bowl", nil, 2)
+	overwrite("xanadu:gingerbread_man", 2)
+	overwrite("xanadu:taco", 4)
+	overwrite("mobs:clownfish_raw", 2)
+	overwrite("mobs:bluefish_raw", 2)
 end
 
 -- player-action based hunger changes
