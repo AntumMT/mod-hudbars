@@ -399,6 +399,7 @@ if minetest.get_modpath("xanadu") then
 	overwrite("xanadu:iced_coffee", 3, "vessels:drinking_glass")
 	overwrite("xanadu:pizza_slice", 3)
 	overwrite("xanadu:cupcake", 4)
+	overwrite("xanadu:cupcake_chocolate", 4)
 	overwrite("xanadu:juice_apple", 4, "vessels:drinking_glass")
 	overwrite("xanadu:juice_coconut", 4, "vessels:drinking_glass")
 	overwrite("xanadu:juice_orange", 4, "vessels:drinking_glass")
@@ -409,7 +410,10 @@ if minetest.get_modpath("xanadu") then
 	overwrite("xanadu:bacon", 4)
 	overwrite("xanadu:burger", 7)
 	overwrite("xanadu:fries", 6)
-	overwrite("xanadu:glass_wine", 2)
+	overwrite("wine:glass_wine", 2)
+	overwrite("wine:glass_beer", 2)
+	overwrite("wine:glass_mead", 2)
+	overwrite("wine:glass_cider", 2)
 	overwrite("xanadu:potato_salad", 8, "ethereal:bowl", nil, 2)
 	overwrite("xanadu:gingerbread_man", 2)
 	overwrite("xanadu:taco", 4)
@@ -446,5 +450,5 @@ function hbhunger.handle_node_actions(pos, oldnode, player, ext)
 	hbhunger.exhaustion[name] = exhaus
 end
 
-minetest.register_on_placenode(hbhunger.handle_node_actions)
+--minetest.register_on_placenode(hbhunger.handle_node_actions)
 minetest.register_on_dignode(hbhunger.handle_node_actions)

@@ -28,9 +28,9 @@ function hb.load_setting(sname, stype, defaultval, valid_values)
 				end
 			end
 			if not valid then
-				minetest.log("error", "[hudbars] Invalid value for "
-					..sname.."! Using default value ("
-					..tostring(defaultval)..").")
+--				minetest.log("error", "[hudbars] Invalid value for "
+--					..sname.."! Using default value ("
+--					..tostring(defaultval)..").")
 				return defaultval
 			else
 				return sval
@@ -294,7 +294,7 @@ function hb.register_hudbar(identifier, text_color, label, textures, default_sta
 		local main_error_text =
 			"[hudbars] Bad initial values of HUD bar identifier “"
 			..tostring(identifier).."” for player "..name..". "
-
+--[[
 		if start_max < start_value then
 			minetest.log("error", main_error_text.."start_max ("
 			..start_max..") is smaller than start_value ("..start_value..")!")
@@ -307,7 +307,7 @@ function hb.register_hudbar(identifier, text_color, label, textures, default_sta
 			minetest.log("error", main_error_text.."start_value ("
 			..start_value..") is smaller than 0!")
 		end
-
+]]
 		hb.hudtables[identifier].hudids[name] = ids
 		hb.hudtables[identifier].hudstate[name] = state
 	end
@@ -348,7 +348,7 @@ end
 
 -- ADDED THIS TOO
 if not hudtable.hudstate[name] then
-print ("line 350 hudtabke.hudstate[name] nil")
+print ("Warning: [hudbars init.lua] line 350 hudtable.hudstate[" .. name .. "] is nil")
 return
 end
 
@@ -372,6 +372,7 @@ end
 	local main_error_text =
 		"[hudbars] Bad call to hb.change_hudbar, identifier: “"
 		..tostring(identifier).."”, player name: “"..name.."”. "
+--[[
 	if new_max_value < new_value then
 		minetest.log("error", main_error_text.."new_max_value ("
 		..new_max_value..") is smaller than new_value ("..new_value..")!")
@@ -384,7 +385,7 @@ end
 		minetest.log("error", main_error_text.."new_value ("
 		..new_value..") is smaller than 0!")
 	end
-
+]]
 	if hudtable.hudstate[name].hidden == false then
 		if max_changed and hb.settings.bar_type == "progress_bar" then
 			if hudtable.hudstate[name].max == 0 then
