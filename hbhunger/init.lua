@@ -274,7 +274,7 @@ function setSprinting(name, sprinting)
 
 		-- is 3d_armor active, then set to armor defaults
 		local def = {}
-		if armor and armor.def[name] then
+		if armor_mod and armor and armor.def[name] then
 			def = armor.def[name]
 		end
 
