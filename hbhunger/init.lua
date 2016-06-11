@@ -273,7 +273,10 @@ function setSprinting(name, sprinting)
 		local player = minetest.get_player_by_name(name)
 
 		-- is 3d_armor active, then set to armor defaults
-		local def = armor.def[name] or nil
+		local def = {}
+		if armor and armor.def[name] then
+			def = armor.def[name]
+		end
 
 		pp.speed = def.speed or 1
 		pp.jump = def.jump or 1

@@ -27,3 +27,4 @@ mush45?
 mushroom?
 seaplants?
 bakedclay?
+3d_armor?
