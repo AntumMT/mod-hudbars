@@ -18,6 +18,9 @@ HUNGER_EXHAUST_PLACE = 1 -- exhaustion increased this value after placed
 HUNGER_EXHAUST_MOVE = 0.3 -- exhaustion increased this value if player movement detected
 HUNGER_EXHAUST_LVL = 160 -- at what exhaustion player satiation gets lowerd
 
+SPRINT_SPEED = 0.8 -- how much faster player can run if satiated
+SPRINT_JUMP = 0.1 -- how much higher player can jump if satiated
+SPRINT_DRAIN = 0.35 -- how fast to drain satation while sprinting (0-1)
 
 --[[load custom settings
 local set = io.open(minetest.get_modpath("hbhunger").."/hbhunger.conf", "r")
@@ -117,6 +120,11 @@ minetest.register_on_respawnplayer(function(player)
 	hbhunger.exhaustion[name] = 0
 end)
 
+-- sprint settings
+local enable_sprint = minetest.setting_getbool("sprint") ~= false
+local enable_sprint_particles = minetest.setting_getbool("sprint_particles") ~= false
+local sprinters = {}
+
 local main_timer = 0
 local timer = 0
 local timer2 = 0
@@ -140,6 +148,59 @@ minetest.register_globalstep(function(dtime)
 			local name = player:get_player_name()
 			local h = tonumber(hbhunger.hunger[name])
 			local hp = player:get_hp()
+
+			-- check if player should be sprinting (hunger must be over 6 points)
+			if enable_sprint
+			and player
+			and player:get_player_control().aux1
+			and player:get_player_control().up
+			and not minetest.check_player_privs(player, {fast = true})
+			and h > 6 then
+
+				setSprinting(name, true)
+
+				-- create particles behind player when sprinting
+				if enable_sprint_particles
+				and sprinters[name] then
+
+					local pos = player:getpos()
+--					local node = minetest.get_node({
+--						x = pos.x,
+--						y = pos.y - 1,
+--						z = pos.z
+--					})
+
+--					if node.name ~= "air" then
+
+					minetest.add_particlespawner({
+						amount = 5,
+						time = 0.01,
+						minpos = {x = pos.x - 0.25, y = pos.y + 0.1, z = pos.z - 0.25},
+						maxpos = {x = pos.x + 0.25, y = pos.y + 0.1, z = pos.z + 0.25},
+						minvel = {x = -0.5, y = 1, z = -0.5},
+						maxvel = {x = 0.5, y = 2, z = 0.5},
+						minacc = {x = 0, y = -5, z = 0},
+						maxacc = {x = 0, y = -12, z = 0},
+						minexptime = 0.25,
+						maxexptime = 0.5,
+						minsize = 0.5,
+						maxsize = 1.0,
+						vertical = false,
+						collisiondetection = false,
+						--texture = "default_dirt.png",
+						texture = "default_cloud.png",
+					})
+
+--					end
+				end
+
+				-- Lower the player's hunger
+				hbhunger.hunger[name] = h - (SPRINT_DRAIN * HUNGER_HUD_TICK)
+				hbhunger.set_hunger(player)
+			else
+				setSprinting(name, nil)
+			end
+			-- END sprint
 
 			if timer > 4 then
 
@@ -197,3 +258,51 @@ minetest.register_globalstep(function(dtime)
 	end
 
 end)
+
+-- 3d armor support
+local pp = {}
+local armor_mod = minetest.get_modpath("3d_armor")
+
+-- Sets the sprint state of a player (0 = stopped / moving, 1 = sprinting)
+function setSprinting(name, sprinting)
+
+	if hbhunger.hunger[name] then
+
+		sprinters[name] = sprinting
+
+		local player = minetest.get_player_by_name(name)
+
+		-- is 3d_armor active, then set to armor defaults
+		local def = armor.def[name] or nil
+
+		pp.speed = def.speed or 1
+		pp.jump = def.jump or 1
+		pp.gravity = def.gravity or 1
+
+		if sprinters[name] then
+
+			player:set_physics_override({
+				speed = pp.speed + SPRINT_SPEED,
+				jump = pp.jump + SPRINT_JUMP,
+				gravity = pp.gravity
+			})
+
+--print ("Speed:", pp.speed + SPRINT_SPEED, "Jump:", pp.jump + SPRINT_JUMP, "Gravity:", pp.gravity)
+
+		else
+
+			player:set_physics_override({
+				speed = pp.speed,
+				jump = pp.jump,
+				gravity = pp.gravity
+			})
+
+--print ("Speed:", pp.speed, "Jump:", pp.jump, "Gravity:", pp.gravity)
+
+		end
+
+		return true
+	end
+
+	return false
+end
