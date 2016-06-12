@@ -120,6 +120,53 @@ minetest.register_on_respawnplayer(function(player)
 	hbhunger.exhaustion[name] = 0
 end)
 
+-- 3d armor support
+local armor_mod = minetest.get_modpath("3d_armor")
+
+-- Sets the sprint state of a player (false = stopped, true = sprinting)
+function set_sprinting(name, sprinting)
+
+	if not hbhunger.hunger[name] then
+		return false
+	end
+
+	local player = minetest.get_player_by_name(name)
+
+	-- is 3d_armor active, then set to armor defaults
+	local def = {}
+	if armor_mod and armor and armor.def[name] then
+		def = armor.def[name]
+	end
+
+	def.speed = def.speed or 1
+	def.jump = def.jump or 1
+	def.gravity = def.gravity or 1
+
+	if sprinting == true then
+
+		player:set_physics_override({
+			speed = def.speed + SPRINT_SPEED,
+			jump = def.jump + SPRINT_JUMP,
+			gravity = def.gravity
+		})
+
+--print ("Speed:", def.speed + SPRINT_SPEED, "Jump:", def.jump + SPRINT_JUMP, "Gravity:", def.gravity)
+
+	else
+
+		player:set_physics_override({
+			speed = def.speed,
+			jump = def.jump,
+			gravity = def.gravity
+		})
+
+--print ("Speed:", def.speed, "Jump:", def.jump, "Gravity:", def.gravity)
+
+	end
+
+	return true
+end
+
 -- sprint settings
 local enable_sprint = minetest.setting_getbool("sprint") ~= false
 local enable_sprint_particles = minetest.setting_getbool("sprint_particles") ~= false
@@ -157,20 +204,19 @@ minetest.register_globalstep(function(dtime)
 			and not minetest.check_player_privs(player, {fast = true})
 			and h > 6 then
 
-				setSprinting(name, true)
+				set_sprinting(name, true)
 
 				-- create particles behind player when sprinting
-				if enable_sprint_particles
-				and sprinters[name] then
+				if enable_sprint_particles then
 
 					local pos = player:getpos()
---					local node = minetest.get_node({
---						x = pos.x,
---						y = pos.y - 1,
---						z = pos.z
---					})
+					local node = minetest.get_node({
+						x = pos.x,
+						y = pos.y - 1,
+						z = pos.z
+					})
 
---					if node.name ~= "air" then
+					if node.name ~= "air" then
 
 					minetest.add_particlespawner({
 						amount = 5,
@@ -191,14 +237,14 @@ minetest.register_globalstep(function(dtime)
 						texture = "default_cloud.png",
 					})
 
---					end
+					end
 				end
 
 				-- Lower the player's hunger
 				hbhunger.hunger[name] = h - (SPRINT_DRAIN * HUNGER_HUD_TICK)
 				hbhunger.set_hunger(player)
 			else
-				setSprinting(name, nil)
+				set_sprinting(name, false)
 			end
 			-- END sprint
 
@@ -258,54 +304,3 @@ minetest.register_globalstep(function(dtime)
 	end
 
 end)
-
--- 3d armor support
-local pp = {}
-local armor_mod = minetest.get_modpath("3d_armor")
-
--- Sets the sprint state of a player (0 = stopped / moving, 1 = sprinting)
-function setSprinting(name, sprinting)
-
-	if hbhunger.hunger[name] then
-
-		sprinters[name] = sprinting
-
-		local player = minetest.get_player_by_name(name)
-
-		-- is 3d_armor active, then set to armor defaults
-		local def = {}
-		if armor_mod and armor and armor.def[name] then
-			def = armor.def[name]
-		end
-
-		pp.speed = def.speed or 1
-		pp.jump = def.jump or 1
-		pp.gravity = def.gravity or 1
-
-		if sprinters[name] then
-
-			player:set_physics_override({
-				speed = pp.speed + SPRINT_SPEED,
-				jump = pp.jump + SPRINT_JUMP,
-				gravity = pp.gravity
-			})
-
---print ("Speed:", pp.speed + SPRINT_SPEED, "Jump:", pp.jump + SPRINT_JUMP, "Gravity:", pp.gravity)
-
-		else
-
-			player:set_physics_override({
-				speed = pp.speed,
-				jump = pp.jump,
-				gravity = pp.gravity
-			})
-
---print ("Speed:", pp.speed, "Jump:", pp.jump, "Gravity:", pp.gravity)
-
-		end
-
-		return true
-	end
-
-	return false
-end
