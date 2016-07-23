@@ -380,8 +380,8 @@ end
 function hb.change_hudbar(player, identifier, new_value, new_max_value,
 		new_icon, new_bgicon, new_bar, new_label, new_text_color)
 
-	if new_value == nil
-	and new_max_value == nil then
+	if new_value == nil and new_max_value == nil and new_icon == nil
+	and new_bgicon == nil and new_bar == nil and new_label == nil and new_text_color == nil then
 		return
 	end
 
