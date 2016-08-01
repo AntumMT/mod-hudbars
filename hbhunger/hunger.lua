@@ -150,6 +150,23 @@ if minetest.get_modpath("mobs") then
 	end
 end
 
+if minetest.get_modpath("nssm") then
+	overwrite ('nssm:heron_leg',2)
+	overwrite ('nssm:chichibios_heron_leg',4)
+	overwrite ('nssm:crocodile_tail',3)
+	overwrite ('nssm:roasted_werewolf_leg',6)
+	overwrite ('nssm:duck_legs',1)
+	overwrite ('nssm:ant_leg',1)
+	overwrite ('nssm:spider_leg',1)
+	overwrite ('nssm:tentacle',2)
+	overwrite ('nssm:worm_flesh',2,"",2) -- poisonous
+	overwrite ('nssm:amphibian_heart',1)
+	overwrite ('nssm:raw_scrausics_wing',1)
+	-- superfoods
+	overwrite ('nssm:phoenix_nuggets',20,"",nil,20)
+	overwrite ('nssm:phoenix_tear',20,"",nil,20)
+end
+
 if minetest.get_modpath("moretrees") then
 
 	overwrite("moretrees:coconut_milk", 1)
