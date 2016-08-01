@@ -151,10 +151,10 @@ if minetest.get_modpath("mobs") then
 end
 
 if minetest.get_modpath("nssm") then
+	overwrite ('nssm:werewolf_leg',3)
 	overwrite ('nssm:heron_leg',2)
 	overwrite ('nssm:chichibios_heron_leg',4)
 	overwrite ('nssm:crocodile_tail',3)
-	overwrite ('nssm:roasted_werewolf_leg',6)
 	overwrite ('nssm:duck_legs',1)
 	overwrite ('nssm:ant_leg',1)
 	overwrite ('nssm:spider_leg',1)
