@@ -201,7 +201,7 @@ minetest.register_globalstep(function(dtime)
 			and player
 			and player:get_player_control().aux1
 			and player:get_player_control().up
-			and not minetest.check_player_privs(player, {fast = true})
+			and not minetest.check_player_privs(name, {fast = true})
 			and h > 6 then
 
 				set_sprinting(name, true)
